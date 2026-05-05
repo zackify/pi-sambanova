@@ -6,10 +6,8 @@ A reusable [pi](https://github.com/badlogic/pi) package that adds SambaNova as a
 
 - Adds the `sambanova` provider
 - Uses SambaCloud's OpenAI-compatible base URL: `https://api.sambanova.ai/v1`
-- Adds `sambanova/MiniMax-M2.7` by default
-- Includes MiniMax-M2.7 pricing for pi usage/cost display:
-  - `$0.60 / 1M` input tokens
-  - `$2.40 / 1M` output tokens
+- Adds a bundled SambaNova model/pricing list by default
+- Includes per-model pricing for pi usage/cost display
 - Supports `/login sambanova` by prompting for a SambaNova API key
 - Supports `SAMBANOVA_API_KEY` as an environment variable
 - Adds `/sambanova-models` to fetch live model IDs from SambaNova's `/v1/models` endpoint and refresh the provider in the current session
@@ -78,11 +76,26 @@ After installing and logging in, select the model in pi:
 /model
 ```
 
-Choose:
+Choose any bundled SambaNova model, for example:
 
 ```text
 sambanova/MiniMax-M2.7
 ```
+
+Bundled models:
+
+| Model | Input / 1M tokens | Output / 1M tokens |
+| --- | ---: | ---: |
+| `DeepSeek-R1-Distill-Llama-70B` | `$0.70` | `$1.40` |
+| `DeepSeek-V3.1-cb` | `$0.15` | `$0.75` |
+| `DeepSeek-V3.1` | `$3.00` | `$4.50` |
+| `DeepSeek-V3.2` | `$3.00` | `$4.50` |
+| `gemma-3-12b-it` | `$0.20` | `$0.35` |
+| `gpt-oss-120b` | `$0.22` | `$0.59` |
+| `Llama-4-Maverick-17B-128E-Instruct` | `$0.63` | `$1.80` |
+| `Meta-Llama-3.3-70B-Instruct` | `$0.60` | `$1.20` |
+| `MiniMax-M2.5` | `$0.30` | `$1.20` |
+| `MiniMax-M2.7` | `$0.60` | `$2.40` |
 
 To refresh live SambaNova model IDs and show known pricing:
 

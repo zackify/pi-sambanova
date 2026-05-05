@@ -5,12 +5,33 @@ const PROVIDER = "sambanova";
 const BASE_URL = "https://api.sambanova.ai/v1";
 const API_KEY_ENV = "SAMBANOVA_API_KEY";
 
+const MODEL_IDS = [
+	"DeepSeek-R1-Distill-Llama-70B",
+	"DeepSeek-V3.1-cb",
+	"DeepSeek-V3.1",
+	"DeepSeek-V3.2",
+	"gemma-3-12b-it",
+	"gpt-oss-120b",
+	"Llama-4-Maverick-17B-128E-Instruct",
+	"Meta-Llama-3.3-70B-Instruct",
+	"MiniMax-M2.5",
+	"MiniMax-M2.7",
+] as const;
+
 const KNOWN_PRICES: Record<string, { input: number; output: number; cacheRead: number; cacheWrite: number }> = {
-	// $0.60 / 1M input tokens, $2.40 / 1M output tokens.
+	"DeepSeek-R1-Distill-Llama-70B": { input: 0.7, output: 1.4, cacheRead: 0, cacheWrite: 0 },
+	"DeepSeek-V3.1-cb": { input: 0.15, output: 0.75, cacheRead: 0, cacheWrite: 0 },
+	"DeepSeek-V3.1": { input: 3, output: 4.5, cacheRead: 0, cacheWrite: 0 },
+	"DeepSeek-V3.2": { input: 3, output: 4.5, cacheRead: 0, cacheWrite: 0 },
+	"gemma-3-12b-it": { input: 0.2, output: 0.35, cacheRead: 0, cacheWrite: 0 },
+	"gpt-oss-120b": { input: 0.22, output: 0.59, cacheRead: 0, cacheWrite: 0 },
+	"Llama-4-Maverick-17B-128E-Instruct": { input: 0.63, output: 1.8, cacheRead: 0, cacheWrite: 0 },
+	"Meta-Llama-3.3-70B-Instruct": { input: 0.6, output: 1.2, cacheRead: 0, cacheWrite: 0 },
+	"MiniMax-M2.5": { input: 0.3, output: 1.2, cacheRead: 0, cacheWrite: 0 },
 	"MiniMax-M2.7": { input: 0.6, output: 2.4, cacheRead: 0, cacheWrite: 0 },
 };
 
-const DEFAULT_MODELS = [makeModel("MiniMax-M2.7")];
+const DEFAULT_MODELS = MODEL_IDS.map(makeModel);
 
 type SambaNovaModel = ReturnType<typeof makeModel>;
 
@@ -106,14 +127,14 @@ export default function (pi: ExtensionAPI) {
 			const apiKey = await ctx.modelRegistry.getApiKeyForProvider(PROVIDER);
 			if (!apiKey) {
 				ctx.ui.notify(
-					`SambaNova provider loaded with MiniMax-M2.7. Run /login ${PROVIDER} or set ${API_KEY_ENV} to refresh live models.\n${renderModelList(DEFAULT_MODELS.map((m) => m.id))}`,
+					`SambaNova provider loaded with bundled model/pricing list. Run /login ${PROVIDER} or set ${API_KEY_ENV} to refresh live models.\n${renderModelList(DEFAULT_MODELS.map((m) => m.id))}`,
 					"info",
 				);
 				return;
 			}
 
 			const liveIds = await fetchSambaNovaModels(apiKey, ctx.signal);
-			const ids = liveIds.includes("MiniMax-M2.7") ? liveIds : ["MiniMax-M2.7", ...liveIds];
+			const ids = [...new Set([...MODEL_IDS, ...liveIds])];
 			registerSambaNova(pi, ids.map(makeModel));
 			ctx.ui.notify(`SambaNova models refreshed:\n${renderModelList(ids)}`, "success");
 		},
