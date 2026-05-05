@@ -1,10 +1,10 @@
 {
   "name": "@zackify/pi-sambanova",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "A pi extension that adds SambaNova as an OpenAI-compatible model provider.",
   "repository": {
     "type": "git",
-    "url": "https://github.com/zackify/pi-sambanova"
+    "url": "git+https://github.com/zackify/pi-sambanova.git"
   },
   "homepage": "https://github.com/zackify/pi-sambanova#readme",
   "bugs": {
